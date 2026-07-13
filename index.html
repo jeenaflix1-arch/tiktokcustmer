@@ -371,11 +371,16 @@
 <div class="toast" id="toast"></div>
 
 <script>
+// ============================================================
+// Customer script — replaces localStorage with backend API.
+// ============================================================
+
+// >>> EDIT THIS to your backend Worker URL (no trailing slash) <<<
+const API_BASE = "https://tiktok-boost-api.jeenaflix1.workers.dev";
+
 (function(){
-  const ORDERS_KEY = 'tb_orders';
-  const CHATS_KEY  = 'tb_chats';
-  const MY_CHAT_ID = 'tb_my_chat_id';
-  const LAST_SEEN  = 'tb_chat_last_seen';
+  const MY_CHAT_ID_KEY = 'tb_my_chat_id';   // only local: which chat this browser owns
+  const LAST_SEEN_KEY  = 'tb_chat_last_seen';
   const $ = s => document.querySelector(s);
 
   // ---------- Utils
@@ -387,10 +392,17 @@
   }
   function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
   function fmtTime(iso){ try{return new Date(iso).toLocaleString()}catch(e){return ''} }
-  function getOrders(){ try{return JSON.parse(localStorage.getItem(ORDERS_KEY)||'[]')}catch(e){return[]} }
-  function setOrders(a){ localStorage.setItem(ORDERS_KEY, JSON.stringify(a)); }
-  function getChats(){ try{return JSON.parse(localStorage.getItem(CHATS_KEY)||'{}')}catch(e){return{}} }
-  function setChats(o){ localStorage.setItem(CHATS_KEY, JSON.stringify(o)); }
+
+  async function api(path, opts){
+    const res = await fetch(API_BASE + path, {
+      ...opts,
+      headers: { 'Content-Type':'application/json', ...(opts && opts.headers) }
+    });
+    let data = null;
+    try { data = await res.json(); } catch(e) {}
+    if(!res.ok) throw new Error((data && data.error) || ('HTTP '+res.status));
+    return data;
+  }
 
   // ---------- FAQ
   document.querySelectorAll('.faq-item').forEach(it=>{
@@ -420,56 +432,40 @@
     r.readAsDataURL(f);
   });
 
-  // ---------- Generate tracking ID
-  function genTid(){
-    const rnd = Math.random().toString(36).toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);
-    const t = Date.now().toString(36).toUpperCase().slice(-4);
-    return 'TB-'+t+rnd;
-  }
-
-  // ---------- Submit order
+  // ---------- Submit order (posts to backend)
   let lastTid = null;
-  $('#orderForm').addEventListener('submit', e=>{
+  $('#orderForm').addEventListener('submit', async e=>{
     e.preventDefault();
     const f = e.target;
-    const tid = genTid();
-    const data = {
-      id: tid,                         // tracking id doubles as unique order id
-      trackingId: tid,
+    const payload = {
       fullName: f.fullName.value.trim(),
       whatsapp: f.whatsapp.value.trim(),
-      email: f.email.value.trim(),
-      country: f.country.value,
-      service: f.service.value,
-      notes: f.notes.value.trim(),
-      screenshot: fileDataUrl,
-      status: 'Order Received',
-      createdAt: new Date().toISOString()
+      email:    f.email.value.trim(),
+      country:  f.country.value,
+      service:  f.service.value,
+      notes:    f.notes.value.trim(),
+      screenshot: fileDataUrl
     };
-    if(!data.fullName || !data.whatsapp || !data.email || !data.country || !data.service || !data.screenshot){
+    if(!payload.fullName || !payload.whatsapp || !payload.email || !payload.country || !payload.service || !payload.screenshot){
       toast('Please fill all required fields',false); return;
     }
-    if(!/^\S+@\S+\.\S+$/.test(data.email)){ toast('Invalid email',false); return; }
-    if(!/^[+\d\s\-()]{7,20}$/.test(data.whatsapp)){ toast('Invalid WhatsApp number',false); return; }
+    if(!/^\S+@\S+\.\S+$/.test(payload.email)){ toast('Invalid email',false); return; }
+    if(!/^[+\d\s\-()]{7,20}$/.test(payload.whatsapp)){ toast('Invalid WhatsApp number',false); return; }
 
     const btn = $('#submitBtn');
     btn.disabled = true; btn.textContent = 'Submitting...';
 
-    setTimeout(()=>{
-      try{
-        const list = getOrders();
-        list.push(data);
-        setOrders(list);
-        lastTid = tid;
-        $('#successId').textContent = tid;
-        f.hidden = true;
-        $('#successBox').classList.add('on');
-        $('#successBox').scrollIntoView({behavior:'smooth', block:'center'});
-      }catch(err){
-        toast('Something went wrong. Try again.',false);
-        btn.disabled=false; btn.textContent='Submit Order';
-      }
-    }, 350);
+    try {
+      const res = await api('/api/orders', { method:'POST', body: JSON.stringify(payload) });
+      lastTid = res.trackingId;
+      $('#successId').textContent = lastTid;
+      f.hidden = true;
+      $('#successBox').classList.add('on');
+      $('#successBox').scrollIntoView({behavior:'smooth', block:'center'});
+    } catch(err){
+      toast('Could not submit: ' + err.message, false);
+      btn.disabled=false; btn.textContent='Submit Order';
+    }
   });
 
   window.copyTid = function(){
@@ -495,7 +491,6 @@
 
   // ---------- Track order
   const STAGES = ['Order Received','Payment Under Review','Payment Approved','Processing','Completed'];
-  // Map any legacy/admin statuses to canonical stage index
   const STATUS_MAP = {
     'Order Received':0,
     'Pending Review':1, 'Payment Under Review':1,
@@ -505,18 +500,26 @@
     'Rejected':-1
   };
 
+  let currentTracking = null;
   $('#trackForm').addEventListener('submit', e=>{
     e.preventDefault();
     const id = $('#trackInput').value.trim().toUpperCase();
     renderTrack(id);
   });
 
-  function renderTrack(id){
+  async function renderTrack(id){
     const err = $('#trackErr'); err.textContent='';
     const res = $('#trackResult');
-    if(!id){ err.textContent='Please enter a Tracking ID.'; res.classList.remove('on'); return; }
-    const order = getOrders().find(o => (o.trackingId||o.id||'').toUpperCase() === id);
-    if(!order){ err.textContent='No order found for this Tracking ID.'; res.classList.remove('on'); return; }
+    if(!id){ err.textContent='Please enter a Tracking ID.'; res.classList.remove('on'); currentTracking=null; return; }
+    let order;
+    try { order = await api('/api/orders/'+encodeURIComponent(id)); }
+    catch(e){ err.textContent='No order found for this Tracking ID.'; res.classList.remove('on'); currentTracking=null; return; }
+    currentTracking = id;
+    paintTrack(order);
+  }
+
+  function paintTrack(order){
+    const res = $('#trackResult');
     const idx = STATUS_MAP[order.status];
     const meta = $('#trackMeta');
     if(idx === -1){
@@ -538,7 +541,6 @@
       if(i<cur) s.classList.add('done');
       else if(i===cur) s.classList.add('current');
     });
-    // bar width based on step count (5 steps -> 4 gaps)
     const pct = cur/(STAGES.length-1)*100;
     $('#stepBar').style.width = 'calc(('+pct+'% - '+(pct/100*32)+'px))';
     meta.innerHTML = `
@@ -551,30 +553,41 @@
     res.classList.add('on');
   }
 
+  // Poll for tracking updates
+  setInterval(async ()=>{
+    if(!currentTracking) return;
+    try { const o = await api('/api/orders/'+encodeURIComponent(currentTracking)); paintTrack(o); }
+    catch(e){}
+  }, 4000);
+
   // ---------- LIVE CHAT
-  function myId(){ return localStorage.getItem(MY_CHAT_ID) || ''; }
-  function setMyId(v){ localStorage.setItem(MY_CHAT_ID, v); }
-  function myChat(){
-    const id = myId(); if(!id) return null;
-    return getChats()[id] || null;
+  function myId(){ return localStorage.getItem(MY_CHAT_ID_KEY) || ''; }
+  function setMyId(v){ localStorage.setItem(MY_CHAT_ID_KEY, v); }
+
+  let myChat = null;   // cached chat object
+
+  async function loadMyChat(){
+    const id = myId(); if(!id){ myChat = null; return null; }
+    try { myChat = await api('/api/chats/'+encodeURIComponent(id)); return myChat; }
+    catch(e){ myChat = null; return null; }
   }
 
   window.toggleChat = function(){
     const p = $('#chatPanel');
     const open = p.classList.toggle('on');
-    if(open){ initChatUi(); markAllRead(); }
+    if(open){ initChatUi(); }
   };
   window.openChat = function(){
     $('#chatPanel').classList.add('on');
-    initChatUi(); markAllRead();
+    initChatUi();
   };
 
-  function initChatUi(){
-    const chat = myChat();
+  async function initChatUi(){
     const nameWrap = $('#chatNameWrap');
     const inputForm = $('#chatInputForm');
     const body = $('#chatBody');
-    if(!chat){
+    await loadMyChat();
+    if(!myChat){
       nameWrap.hidden = false;
       inputForm.hidden = true;
       body.innerHTML = '<div class="chat-empty">👋 Welcome! Enter your name to start chatting with our support team.</div>';
@@ -583,46 +596,41 @@
     nameWrap.hidden = true;
     inputForm.hidden = false;
     renderChatMessages();
+    markAllRead();
     setTimeout(()=>$('#chatInput').focus(), 50);
   }
 
-  window.startChat = function(){
+  window.startChat = async function(){
     const name = $('#chatName').value.trim();
     const phone = $('#chatPhone').value.trim();
     if(!name){ toast('Please enter your name',false); return; }
-    const id = 'chat_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-    const chats = getChats();
-    chats[id] = {
-      id, name, phone,
-      createdAt: new Date().toISOString(),
-      messages: [{
-        from:'system', body:'Chat started. A support agent will be with you shortly.', at:new Date().toISOString()
-      }]
-    };
-    setChats(chats);
-    setMyId(id);
-    initChatUi();
+    try {
+      const res = await api('/api/chats', { method:'POST', body: JSON.stringify({ name, phone }) });
+      setMyId(res.id);
+      await initChatUi();
+    } catch(e){ toast('Could not start chat: '+e.message, false); }
   };
 
-  $('#chatInputForm').addEventListener('submit', e=>{
+  $('#chatInputForm').addEventListener('submit', async e=>{
     e.preventDefault();
     const inp = $('#chatInput');
     const body = inp.value.trim(); if(!body) return;
     const id = myId(); if(!id) return;
-    const chats = getChats();
-    if(!chats[id]) return;
-    chats[id].messages.push({from:'customer', body, at:new Date().toISOString()});
-    chats[id].updatedAt = new Date().toISOString();
-    setChats(chats);
     inp.value='';
-    renderChatMessages();
-    markAllRead();
+    try {
+      await api('/api/chats/'+encodeURIComponent(id)+'/messages', {
+        method:'POST', body: JSON.stringify({ from:'customer', body })
+      });
+      await loadMyChat();
+      renderChatMessages();
+      markAllRead();
+    } catch(err){ toast('Send failed: '+err.message, false); }
   });
 
   function renderChatMessages(){
-    const chat = myChat(); const body = $('#chatBody');
-    if(!chat || !chat.messages.length){ body.innerHTML = '<div class="chat-empty">Say hi 👋</div>'; return; }
-    body.innerHTML = chat.messages.map(m=>{
+    const body = $('#chatBody');
+    if(!myChat || !myChat.messages.length){ body.innerHTML = '<div class="chat-empty">Say hi 👋</div>'; return; }
+    body.innerHTML = myChat.messages.map(m=>{
       if(m.from==='system') return `<div class="chat-empty" style="margin:6px auto;padding:4px;font-size:11px">${esc(m.body)}</div>`;
       const mine = m.from==='customer';
       return `<div class="chat-msg ${mine?'me':'them'}">${esc(m.body)}<span class="t">${fmtTime(m.at)}</span></div>`;
@@ -631,41 +639,36 @@
   }
 
   function markAllRead(){
-    const chat = myChat(); if(!chat) return;
-    localStorage.setItem(LAST_SEEN, String(chat.messages.length));
+    if(!myChat) return;
+    localStorage.setItem(LAST_SEEN_KEY, String(myChat.messages.length));
     updateUnread();
   }
   function updateUnread(){
-    const chat = myChat();
     const badge = $('#chatUnread');
-    if(!chat){ badge.classList.remove('on'); return; }
-    const seen = parseInt(localStorage.getItem(LAST_SEEN)||'0',10);
-    const adminMsgs = chat.messages.filter(m=>m.from==='admin').length;
-    // Count unseen admin messages
+    if(!myChat){ badge.classList.remove('on'); return; }
+    const seen = parseInt(localStorage.getItem(LAST_SEEN_KEY)||'0',10);
     let unread = 0;
-    for(let i=seen;i<chat.messages.length;i++){
-      if(chat.messages[i].from==='admin') unread++;
+    for(let i=seen;i<myChat.messages.length;i++){
+      if(myChat.messages[i].from==='admin') unread++;
     }
     if(unread>0){ badge.textContent=unread; badge.classList.add('on'); }
     else badge.classList.remove('on');
   }
 
-  // Cross-tab sync (admin replies)
-  window.addEventListener('storage', e=>{
-    if(e.key===CHATS_KEY){
-      if($('#chatPanel').classList.contains('on')){ renderChatMessages(); markAllRead(); }
+  // Poll chat for new admin replies
+  async function pollChat(){
+    if(!myId()) return;
+    try {
+      await loadMyChat();
+      const panelOpen = $('#chatPanel').classList.contains('on');
+      if(panelOpen){ renderChatMessages(); markAllRead(); }
       else updateUnread();
-    }
-    if(e.key===ORDERS_KEY){
-      const val = $('#trackInput').value.trim().toUpperCase();
-      if(val && $('#trackResult').classList.contains('on')) renderTrack(val);
-    }
-  });
-
-  // Poll unread every few seconds (same-tab admin updates via admin.html open in another tab already covered by 'storage', but poll acts as safety)
-  setInterval(updateUnread, 3000);
-  updateUnread();
+    } catch(e){}
+  }
+  setInterval(pollChat, 3000);
+  pollChat();
 })();
+
 </script>
 </body>
 </html>
