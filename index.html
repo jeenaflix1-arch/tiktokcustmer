@@ -267,10 +267,10 @@
               <option>TikTok Followers Growth</option>
               <option>TikTok Views Boost</option>
               <option>TikTok Likes Package</option>
-              <option> Create a TikTok UK Account(</option>
+              <option>Complete Growth Bundle</option>
             </select>
           </div>
-          <div class="field"><label>Notes / Additional Requirements</label><textarea name="notes" maxlength="500" placeholder=""Please share your new Gmail ID and password here"></textarea></div>
+          <div class="field"><label>Notes / Additional Requirements</label><textarea name="notes" maxlength="500" placeholder="Share your TikTok username or any specific requirements..."></textarea></div>
           <div class="field">
             <label>Payment Screenshot <span class="req">*</span></label>
             <label class="file-drop" id="fileDrop">
@@ -350,19 +350,24 @@
   <div class="chat-hd">
     <div>
       <h4>Live Support</h4>
-      <div class="sub">We're online now</div>
+      <div class="sub" id="chatHdSub">We're online now</div>
     </div>
-    <button class="x" onclick="toggleChat()" aria-label="Close">×</button>
+    <div style="display:flex;gap:6px;align-items:center">
+      <button class="x" id="chatEndBtn" onclick="endChat()" title="End chat" style="width:auto;padding:0 10px;font-size:11px;font-weight:700;display:none">End</button>
+      <button class="x" onclick="toggleChat()" aria-label="Close">×</button>
+    </div>
   </div>
   <div id="chatNameWrap" class="chat-name-form" hidden>
-    <label>Your name</label>
+    <label>Your name *</label>
     <input type="text" id="chatName" placeholder="Enter your name" maxlength="50"/>
-    <label>WhatsApp / Phone (optional)</label>
+    <label>WhatsApp Number *</label>
     <input type="text" id="chatPhone" placeholder="03XXXXXXXXX" maxlength="20"/>
     <button onclick="startChat()">Start Chat</button>
   </div>
   <div class="chat-body" id="chatBody"></div>
   <form class="chat-input" id="chatInputForm" hidden>
+    <label for="chatFile" style="display:flex;align-items:center;justify-content:center;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:0 12px;border-radius:8px;cursor:pointer;font-size:16px" title="Attach image">📎</label>
+    <input type="file" id="chatFile" accept="image/*" hidden/>
     <input type="text" id="chatInput" placeholder="Type your message..." maxlength="500" autocomplete="off"/>
     <button type="submit">Send</button>
   </form>
@@ -375,12 +380,13 @@
 // Customer script — replaces localStorage with backend API.
 // ============================================================
 
-// >>> EDIT THIS to your backend Worker URL (no trailing slash) <<<
-const API_BASE = "https://tiktok-boost-api.jeenaflix1.workers.dev";
+// Backend API URL (Cloudflare Worker)
+const API_URL = "https://tiktok-boost-api.jeenaflix1.workers.dev";
+const API_BASE = API_URL;
 
 (function(){
-  const MY_CHAT_ID_KEY = 'tb_my_chat_id';   // only local: which chat this browser owns
-  const LAST_SEEN_KEY  = 'tb_chat_last_seen';
+  // Chat state is kept IN-MEMORY ONLY (no localStorage/sessionStorage/cookies).
+  // On refresh the customer must start a new chat session.
   const $ = s => document.querySelector(s);
 
   // ---------- Utils
@@ -560,16 +566,16 @@ const API_BASE = "https://tiktok-boost-api.jeenaflix1.workers.dev";
     catch(e){}
   }, 4000);
 
-  // ---------- LIVE CHAT
-  function myId(){ return localStorage.getItem(MY_CHAT_ID_KEY) || ''; }
-  function setMyId(v){ localStorage.setItem(MY_CHAT_ID_KEY, v); }
-
-  let myChat = null;   // cached chat object
+  // ---------- LIVE CHAT (in-memory session; nothing persisted client-side)
+  let myChatId = null;        // unique chat session id from server
+  let myChat = null;          // cached chat object {id,name,phone,messages,ended,...}
+  let lastSeenCount = 0;      // for unread badge — reset on refresh (in-memory)
+  let pendingAttachment = null; // {dataUrl, name} awaiting send
 
   async function loadMyChat(){
-    const id = myId(); if(!id){ myChat = null; return null; }
-    try { myChat = await api('/api/chats/'+encodeURIComponent(id)); return myChat; }
-    catch(e){ myChat = null; return null; }
+    if(!myChatId){ myChat = null; return null; }
+    try { myChat = await api('/api/chats/'+encodeURIComponent(myChatId)); return myChat; }
+    catch(e){ /* session lost server-side */ myChat = null; myChatId = null; return null; }
   }
 
   window.toggleChat = function(){
@@ -582,44 +588,80 @@ const API_BASE = "https://tiktok-boost-api.jeenaflix1.workers.dev";
     initChatUi();
   };
 
+  function showNameForm(){
+    $('#chatNameWrap').hidden = false;
+    $('#chatInputForm').hidden = true;
+    $('#chatEndBtn').style.display = 'none';
+    $('#chatHdSub').textContent = "We're online now";
+    $('#chatBody').innerHTML = '<div class="chat-empty">👋 Welcome! Enter your name & WhatsApp number to start a new chat with our support team.</div>';
+  }
+
   async function initChatUi(){
-    const nameWrap = $('#chatNameWrap');
-    const inputForm = $('#chatInputForm');
-    const body = $('#chatBody');
+    if(!myChatId){ showNameForm(); return; }
     await loadMyChat();
-    if(!myChat){
-      nameWrap.hidden = false;
-      inputForm.hidden = true;
-      body.innerHTML = '<div class="chat-empty">👋 Welcome! Enter your name to start chatting with our support team.</div>';
-      return;
-    }
-    nameWrap.hidden = true;
-    inputForm.hidden = false;
+    if(!myChat){ showNameForm(); return; }
+    $('#chatNameWrap').hidden = true;
+    $('#chatInputForm').hidden = !!myChat.ended;
+    $('#chatEndBtn').style.display = myChat.ended ? 'none' : '';
     renderChatMessages();
     markAllRead();
-    setTimeout(()=>$('#chatInput').focus(), 50);
+    setTimeout(()=>{ const i=$('#chatInput'); if(i && !myChat.ended) i.focus(); }, 50);
   }
 
   window.startChat = async function(){
     const name = $('#chatName').value.trim();
     const phone = $('#chatPhone').value.trim();
-    if(!name){ toast('Please enter your name',false); return; }
+    if(!name){ toast('Please enter your name', false); return; }
+    if(!phone || !/^[+\d\s\-()]{7,20}$/.test(phone)){ toast('Please enter a valid WhatsApp number', false); return; }
     try {
       const res = await api('/api/chats', { method:'POST', body: JSON.stringify({ name, phone }) });
-      setMyId(res.id);
+      myChatId = res.id;
+      lastSeenCount = 0;
+      $('#chatName').value = ''; $('#chatPhone').value = '';
       await initChatUi();
     } catch(e){ toast('Could not start chat: '+e.message, false); }
   };
 
+  window.endChat = async function(){
+    if(!myChatId) return;
+    if(!confirm('End this chat session? You will need to enter your details again to start a new chat.')) return;
+    try { await api('/api/chats/'+encodeURIComponent(myChatId)+'/end', { method:'POST', body: JSON.stringify({ by:'customer' }) }); }
+    catch(e){ /* ignore — reset local anyway */ }
+    myChatId = null; myChat = null; lastSeenCount = 0; pendingAttachment = null;
+    showNameForm();
+    toast('Chat ended');
+  };
+
+  // Attachment picker
+  $('#chatFile').addEventListener('change', e=>{
+    const f = e.target.files[0]; e.target.value = '';
+    if(!f) return;
+    if(!f.type.startsWith('image/')){ toast('Please pick an image', false); return; }
+    if(f.size > 3*1024*1024){ toast('Image too large (max 3MB)', false); return; }
+    const r = new FileReader();
+    r.onload = ev => {
+      pendingAttachment = { dataUrl: ev.target.result, name: f.name };
+      const inp = $('#chatInput');
+      inp.placeholder = '📎 '+ f.name +' — add a message (optional) and press Send';
+      inp.focus();
+    };
+    r.readAsDataURL(f);
+  });
+
   $('#chatInputForm').addEventListener('submit', async e=>{
     e.preventDefault();
+    if(!myChatId){ return; }
+    if(myChat && myChat.ended){ toast('Chat has ended', false); return; }
     const inp = $('#chatInput');
-    const body = inp.value.trim(); if(!body) return;
-    const id = myId(); if(!id) return;
-    inp.value='';
+    const body = inp.value.trim();
+    const att = pendingAttachment;
+    if(!body && !att) return;
+    inp.value=''; inp.placeholder = 'Type your message...';
+    pendingAttachment = null;
     try {
-      await api('/api/chats/'+encodeURIComponent(id)+'/messages', {
-        method:'POST', body: JSON.stringify({ from:'customer', body })
+      await api('/api/chats/'+encodeURIComponent(myChatId)+'/messages', {
+        method:'POST',
+        body: JSON.stringify({ from:'customer', body: body || '', attachment: att ? att.dataUrl : undefined })
       });
       await loadMyChat();
       renderChatMessages();
@@ -630,34 +672,47 @@ const API_BASE = "https://tiktok-boost-api.jeenaflix1.workers.dev";
   function renderChatMessages(){
     const body = $('#chatBody');
     if(!myChat || !myChat.messages.length){ body.innerHTML = '<div class="chat-empty">Say hi 👋</div>'; return; }
-    body.innerHTML = myChat.messages.map(m=>{
+    const msgsHtml = myChat.messages.map(m=>{
       if(m.from==='system') return `<div class="chat-empty" style="margin:6px auto;padding:4px;font-size:11px">${esc(m.body)}</div>`;
       const mine = m.from==='customer';
-      return `<div class="chat-msg ${mine?'me':'them'}">${esc(m.body)}<span class="t">${fmtTime(m.at)}</span></div>`;
+      const img = m.attachment ? `<img src="${m.attachment}" alt="attachment" style="max-width:100%;border-radius:8px;display:block;margin-bottom:4px"/>` : '';
+      const txt = m.body ? esc(m.body) : '';
+      return `<div class="chat-msg ${mine?'me':'them'}">${img}${txt}<span class="t">${fmtTime(m.at)}</span></div>`;
     }).join('');
+    // Waiting-for-agent hint
+    let hint = '';
+    if(!myChat.ended){
+      const last = myChat.messages[myChat.messages.length-1];
+      if(last && last.from==='customer'){
+        hint = `<div class="chat-empty" style="margin:6px auto;padding:6px;font-size:11px;color:var(--muted)">⏳ Waiting for agent reply... an agent will reply soon.</div>`;
+      }
+    } else {
+      hint = `<div class="chat-empty" style="margin:6px auto;padding:6px;font-size:11px;color:var(--bad)">This chat has ended. Please start a new chat.</div>`;
+    }
+    body.innerHTML = msgsHtml + hint;
     body.scrollTop = body.scrollHeight;
+    $('#chatHdSub').textContent = myChat.ended ? 'Chat ended' : "We're online now";
   }
 
   function markAllRead(){
     if(!myChat) return;
-    localStorage.setItem(LAST_SEEN_KEY, String(myChat.messages.length));
+    lastSeenCount = myChat.messages.length;
     updateUnread();
   }
   function updateUnread(){
     const badge = $('#chatUnread');
     if(!myChat){ badge.classList.remove('on'); return; }
-    const seen = parseInt(localStorage.getItem(LAST_SEEN_KEY)||'0',10);
     let unread = 0;
-    for(let i=seen;i<myChat.messages.length;i++){
+    for(let i=lastSeenCount;i<myChat.messages.length;i++){
       if(myChat.messages[i].from==='admin') unread++;
     }
     if(unread>0){ badge.textContent=unread; badge.classList.add('on'); }
     else badge.classList.remove('on');
   }
 
-  // Poll chat for new admin replies
+  // Poll chat for new admin replies (only while a session is active)
   async function pollChat(){
-    if(!myId()) return;
+    if(!myChatId) return;
     try {
       await loadMyChat();
       const panelOpen = $('#chatPanel').classList.contains('on');
@@ -666,7 +721,6 @@ const API_BASE = "https://tiktok-boost-api.jeenaflix1.workers.dev";
     } catch(e){}
   }
   setInterval(pollChat, 3000);
-  pollChat();
 })();
 
 </script>
