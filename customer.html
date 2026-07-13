@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TikTok Boost · Grow Your TikTok Account</title>
+<meta name="description" content="Premium TikTok account growth service. Real followers, safe delivery, only 1499 PKR." />
+<style>
+  :root{
+    --bg:#0a0a0f;--panel:#12121a;--panel2:#1a1a24;--border:#26263a;
+    --text:#f4f4f7;--muted:#8a8aa0;
+    --accent:#ff2e63;--accent2:#08d9d6;
+    --ok:#22c55e;--bad:#ef4444;--warn:#f59e0b;--info:#3b82f6;
+    --radius:14px;--shadow:0 20px 60px rgba(0,0,0,.5);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  button,input,select,textarea{font-family:inherit}
+  img{max-width:100%;display:block}
+
+  /* NAV */
+  .nav{position:fixed;top:0;left:0;right:0;background:rgba(10,10,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);z-index:50}
+  .nav-in{max-width:1200px;margin:0 auto;padding:14px 20px;display:flex;justify-content:space-between;align-items:center}
+  .logo{font-weight:800;font-size:18px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:22px;font-size:14px}
+  .nav-links a{color:var(--muted);transition:.15s}
+  .nav-links a:hover{color:var(--text)}
+  .cta{background:linear-gradient(135deg,var(--accent),#ff5e8a);color:#fff;padding:9px 18px;border-radius:8px;font-weight:600;font-size:13px;border:none;cursor:pointer;transition:.15s}
+  .cta:hover{filter:brightness(1.1);transform:translateY(-1px)}
+
+  /* HERO */
+  .hero{padding:140px 20px 80px;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 30%,rgba(255,46,99,.25),transparent 45%),radial-gradient(circle at 80% 70%,rgba(8,217,214,.22),transparent 45%);pointer-events:none;z-index:0}
+  .hero-in{max-width:900px;margin:0 auto;position:relative;z-index:1}
+  .tag{display:inline-block;background:var(--panel);border:1px solid var(--border);padding:6px 14px;border-radius:20px;font-size:12px;color:var(--accent2);margin-bottom:22px}
+  h1{font-size:clamp(32px,6vw,58px);line-height:1.1;font-weight:800;margin-bottom:18px;letter-spacing:-.02em}
+  h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lead{color:var(--muted);font-size:17px;max-width:600px;margin:0 auto 32px}
+  .price-card{display:inline-flex;flex-direction:column;align-items:center;background:var(--panel);border:1px solid var(--border);padding:22px 36px;border-radius:var(--radius);margin-bottom:26px;box-shadow:var(--shadow)}
+  .price-card .amt{font-size:44px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .price-card .cur{color:var(--muted);font-size:13px;margin-top:2px}
+  .btn-lg{background:linear-gradient(135deg,var(--accent),#ff5e8a);color:#fff;padding:15px 34px;border-radius:10px;font-weight:700;font-size:16px;border:none;cursor:pointer;box-shadow:0 12px 30px rgba(255,46,99,.35);transition:.2s;display:inline-block}
+  .btn-lg:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(255,46,99,.5)}
+
+  /* SECTIONS */
+  section.pad{padding:80px 20px}
+  .wrap{max-width:1100px;margin:0 auto}
+  .section-title{text-align:center;font-size:32px;font-weight:800;margin-bottom:12px;letter-spacing:-.01em}
+  .section-sub{text-align:center;color:var(--muted);margin-bottom:44px;font-size:15px}
+
+  /* FEATURES */
+  .features{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+  .feat{background:var(--panel);border:1px solid var(--border);padding:26px 22px;border-radius:var(--radius);transition:.2s}
+  .feat:hover{border-color:var(--accent2);transform:translateY(-3px)}
+  .feat .ic{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:22px}
+  .feat h3{font-size:17px;margin-bottom:8px}
+  .feat p{color:var(--muted);font-size:14px}
+
+  /* ORDER */
+  #order{background:var(--panel);}
+  .order-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start}
+  .pay-info{background:var(--panel2);border:1px solid var(--border);border-radius:var(--radius);padding:26px}
+  .pay-info h3{font-size:18px;margin-bottom:16px}
+  .pay-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed var(--border);font-size:14px}
+  .pay-row:last-of-type{border-bottom:none}
+  .pay-row .k{color:var(--muted)}
+  .pay-row .v{font-weight:600}
+  .copy{background:transparent;border:1px solid var(--border);color:var(--accent2);padding:3px 8px;border-radius:6px;font-size:11px;margin-left:6px;cursor:pointer}
+  .pay-note{margin-top:16px;padding:12px;background:rgba(255,46,99,.08);border-left:3px solid var(--accent);border-radius:6px;font-size:13px;color:var(--muted)}
+
+  form{background:var(--panel2);border:1px solid var(--border);border-radius:var(--radius);padding:26px}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  .field label .req{color:var(--accent)}
+  .field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:11px 13px;border-radius:8px;font-size:14px;outline:none;transition:.15s}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent2)}
+  .field textarea{min-height:80px;resize:vertical}
+  .file-drop{border:2px dashed var(--border);border-radius:8px;padding:22px;text-align:center;cursor:pointer;transition:.15s;background:var(--bg)}
+  .file-drop:hover{border-color:var(--accent2)}
+  .file-drop.has{border-color:var(--ok);color:var(--ok)}
+  .file-drop input{display:none}
+  .preview{margin-top:10px;max-height:160px;border-radius:8px;border:1px solid var(--border)}
+  .submit{width:100%;background:linear-gradient(135deg,var(--accent),#ff5e8a);color:#fff;padding:14px;border-radius:8px;font-weight:700;font-size:15px;border:none;cursor:pointer;margin-top:8px;transition:.15s}
+  .submit:hover{filter:brightness(1.1)}
+  .submit:disabled{opacity:.6;cursor:not-allowed}
+
+  .success{display:none;background:linear-gradient(135deg,rgba(34,197,94,.15),rgba(8,217,214,.1));border:1px solid var(--ok);border-radius:var(--radius);padding:28px;text-align:center}
+  .success.on{display:block}
+  .success .ic{font-size:48px;margin-bottom:12px}
+  .success h3{color:var(--ok);margin-bottom:8px}
+  .track-info{margin-top:14px;padding:14px;background:var(--panel);border-radius:8px;font-size:13px;color:var(--muted)}
+  .track-info .tid{display:block;font-size:20px;font-weight:800;color:var(--accent2);margin:6px 0;letter-spacing:1px;font-family:ui-monospace,Menlo,monospace}
+
+  /* TRACK */
+  #track{background:var(--bg)}
+  .track-box{max-width:720px;margin:0 auto;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+  .track-form{display:flex;gap:10px;flex-wrap:wrap}
+  .track-form input{flex:1;min-width:200px;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:12px 14px;border-radius:8px;font-size:15px;outline:none;font-family:ui-monospace,Menlo,monospace;letter-spacing:1px}
+  .track-form input:focus{border-color:var(--accent2)}
+  .track-form button{background:linear-gradient(135deg,var(--accent),#ff5e8a);color:#fff;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;border:none;cursor:pointer}
+  .track-result{display:none;margin-top:22px}
+  .track-result.on{display:block}
+  .track-err{color:var(--bad);margin-top:12px;font-size:13px;min-height:16px}
+  .steps{display:flex;justify-content:space-between;position:relative;margin:26px 0 10px}
+  .steps::before{content:"";position:absolute;top:16px;left:16px;right:16px;height:2px;background:var(--border);z-index:0}
+  .steps .bar{position:absolute;top:16px;left:16px;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:1;transition:width .4s}
+  .step{position:relative;z-index:2;flex:1;text-align:center;font-size:11px;color:var(--muted);max-width:110px}
+  .step .dot{width:32px;height:32px;border-radius:50%;background:var(--panel2);border:2px solid var(--border);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--muted);transition:.2s}
+  .step.done .dot,.step.current .dot{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
+  .step.done, .step.current{color:var(--text);font-weight:600}
+  .step.current .dot{box-shadow:0 0 0 4px rgba(8,217,214,.2)}
+  .track-meta{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:16px;font-size:13px}
+  .track-meta .row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border)}
+  .track-meta .row:last-child{border-bottom:none}
+  .track-meta .k{color:var(--muted)}
+
+  /* FAQ */
+  .faq{max-width:800px;margin:0 auto}
+  .faq-item{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden}
+  .faq-q{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:15px}
+  .faq-q::after{content:"+";color:var(--accent);font-size:22px;transition:.2s}
+  .faq-item.on .faq-q::after{transform:rotate(45deg)}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;padding:0 20px;color:var(--muted);font-size:14px}
+  .faq-item.on .faq-a{max-height:200px;padding:0 20px 16px}
+
+  /* CONTACT / LIVE CHAT SECTION */
+  #contact .wrap{text-align:center}
+  .chat-card{max-width:520px;margin:22px auto 0;background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+  .chat-card .badge247{display:inline-block;background:rgba(34,197,94,.15);color:var(--ok);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.5px;margin-bottom:12px}
+  .chat-card h3{font-size:20px;margin-bottom:8px}
+  .chat-card p{color:var(--muted);font-size:14px;margin-bottom:18px}
+  .chat-card button{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:12px 26px;border-radius:10px;font-weight:700;font-size:14px;border:none;cursor:pointer}
+  footer{border-top:1px solid var(--border);padding:28px 20px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* LIVE CHAT WIDGET */
+  .chat-fab{position:fixed;bottom:22px;right:22px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:26px;border:none;cursor:pointer;box-shadow:0 12px 30px rgba(255,46,99,.4);z-index:150;display:flex;align-items:center;justify-content:center;transition:.2s}
+  .chat-fab:hover{transform:scale(1.06)}
+  .chat-fab .dot-unread{position:absolute;top:6px;right:6px;background:var(--bad);color:#fff;border-radius:50%;min-width:20px;height:20px;font-size:11px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 5px;border:2px solid var(--bg)}
+  .chat-fab .dot-unread.on{display:flex}
+  .chat-panel{position:fixed;bottom:94px;right:22px;width:360px;max-width:calc(100vw - 30px);height:520px;max-height:calc(100vh - 120px);background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);z-index:150;display:none;flex-direction:column;overflow:hidden}
+  .chat-panel.on{display:flex}
+  .chat-hd{padding:14px 16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;display:flex;justify-content:space-between;align-items:center}
+  .chat-hd h4{font-size:15px;font-weight:700}
+  .chat-hd .sub{font-size:11px;opacity:.85;display:flex;align-items:center;gap:6px;margin-top:2px}
+  .chat-hd .sub::before{content:"";width:8px;height:8px;background:#22ff7a;border-radius:50%;box-shadow:0 0 6px #22ff7a}
+  .chat-hd .x{background:rgba(255,255,255,.2);color:#fff;width:28px;height:28px;border-radius:50%;border:none;cursor:pointer;font-size:16px}
+  .chat-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+  .chat-msg{max-width:80%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.45;word-wrap:break-word}
+  .chat-msg.me{align-self:flex-end;background:linear-gradient(135deg,var(--accent),#ff5e8a);color:#fff;border-bottom-right-radius:4px}
+  .chat-msg.them{align-self:flex-start;background:var(--panel2);color:var(--text);border:1px solid var(--border);border-bottom-left-radius:4px}
+  .chat-msg .t{display:block;font-size:10px;opacity:.7;margin-top:3px}
+  .chat-empty{color:var(--muted);text-align:center;font-size:13px;margin:auto;padding:20px}
+  .chat-name-form{padding:16px;border-bottom:1px solid var(--border);background:var(--panel2)}
+  .chat-name-form label{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;font-weight:600}
+  .chat-name-form input{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:9px 11px;border-radius:6px;font-size:13px;outline:none;margin-bottom:8px}
+  .chat-name-form button{width:100%;background:var(--accent2);color:#000;font-weight:700;padding:9px;border:none;border-radius:6px;cursor:pointer;font-size:13px}
+  .chat-input{border-top:1px solid var(--border);padding:10px;display:flex;gap:8px;background:var(--panel)}
+  .chat-input input{flex:1;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:8px;font-size:13px;outline:none}
+  .chat-input input:focus{border-color:var(--accent2)}
+  .chat-input button{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;padding:0 16px;border-radius:8px;border:none;cursor:pointer;font-weight:700;font-size:13px}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);background:var(--panel);border:1px solid var(--border);border-left:4px solid var(--ok);padding:12px 20px;border-radius:8px;box-shadow:var(--shadow);z-index:200;opacity:0;transition:.25s;font-size:14px}
+  .toast.on{opacity:1;transform:translate(-50%,0)}
+
+  @media(max-width:760px){
+    .nav-links{display:none}
+    .order-grid{grid-template-columns:1fr}
+    section.pad{padding:60px 18px}
+    .hero{padding:120px 18px 60px}
+    .step{font-size:10px}
+    .step .dot{width:26px;height:26px;font-size:11px}
+    .steps::before,.steps .bar{top:13px}
+    .chat-panel{bottom:88px;right:10px;left:10px;width:auto;height:70vh}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-in">
+    <div class="logo">TikTok Boost</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#order">Order</a>
+      <a href="#track">Track Order</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Live Chat</a>
+    </div>
+    <button class="cta" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})">Order Now</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-in">
+    <span class="tag">✨ Trusted by 5,000+ creators</span>
+    <h1>Grow Your <span>TikTok</span><br/>Account the Smart Way</h1>
+    <p class="lead">Real, active audience growth delivered safely. No password required. Fast, reliable, and affordable.</p>
+    <div class="price-card">
+      <div class="amt">1499 PKR</div>
+      <div class="cur">One-time payment · Full package</div>
+    </div>
+    <br/>
+    <a href="#order" class="btn-lg">Order Now →</a>
+  </div>
+</header>
+
+<section id="features" class="pad">
+  <div class="wrap">
+    <div class="section-title">Why Choose Us</div>
+    <p class="section-sub">Premium service, real results, zero risk.</p>
+    <div class="features">
+      <div class="feat"><div class="ic">🚀</div><h3>Fast Delivery</h3><p>Orders start processing within 24 hours of payment verification.</p></div>
+      <div class="feat"><div class="ic">🔒</div><h3>100% Safe</h3><p>No password needed. Your account stays completely secure.</p></div>
+      <div class="feat"><div class="ic">💎</div><h3>Real Quality</h3><p>Authentic audience growth — not bots that vanish overnight.</p></div>
+      <div class="feat"><div class="ic">💬</div><h3>24/7 Live Chat</h3><p>Instant support anytime through our live chat widget.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="order" class="pad">
+  <div class="wrap">
+    <div class="section-title">Place Your Order</div>
+    <p class="section-sub">Fill the form, upload payment proof, and we'll take it from there.</p>
+    <div class="order-grid">
+      <div>
+        <div class="pay-info">
+          <h3>💳 Payment Details</h3>
+          <div class="pay-row"><span class="k">Amount</span><span class="v">1499 PKR</span></div>
+          <div class="pay-row"><span class="k">Method</span><span class="v">NayaPay</span></div>
+          <div class="pay-row"><span class="k">Account Name</span><span class="v">Muhammad Usman</span></div>
+          <div class="pay-row"><span class="k">Account Number</span><span class="v" id="acctNum">03096403818<button class="copy" onclick="copyAcct()">Copy</button></span></div>
+          <div class="pay-note">📌 Send payment first, then upload the screenshot in the form. Order will be verified within a few hours.</div>
+        </div>
+      </div>
+      <div>
+        <div id="successBox" class="success">
+          <div class="ic">✅</div>
+          <h3>Order Received!</h3>
+          <p>Your order has been received. Save your Tracking ID to check status anytime.</p>
+          <div class="track-info">
+            Your Tracking ID
+            <span class="tid" id="successId">—</span>
+            <button class="cta" style="margin-top:4px;padding:6px 12px;font-size:12px" onclick="copyTid()">Copy Tracking ID</button>
+          </div>
+          <button class="cta" style="margin-top:16px" onclick="goTrack()">Track My Order</button>
+          <button class="cta" style="margin-top:8px;background:var(--panel2)" onclick="resetForm()">Place another order</button>
+        </div>
+        <form id="orderForm" autocomplete="off">
+          <div class="field"><label>Full Name <span class="req">*</span></label><input type="text" name="fullName" required maxlength="80"/></div>
+          <div class="field"><label>WhatsApp Number <span class="req">*</span></label><input type="tel" name="whatsapp" required maxlength="20" placeholder="03XXXXXXXXX"/></div>
+          <div class="field"><label>Email Address <span class="req">*</span></label><input type="email" name="email" required maxlength="120"/></div>
+          <div class="field"><label>Country <span class="req">*</span></label>
+            <select name="country" required>
+              <option value="">Select country</option>
+              <option>Pakistan</option><option>India</option><option>Bangladesh</option>
+              <option>United Arab Emirates</option><option>Saudi Arabia</option>
+              <option>United Kingdom</option><option>United States</option><option>Canada</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label>Required Service <span class="req">*</span></label>
+            <select name="service" required>
+              <option value="">Select service</option>
+              <option>TikTok Followers Growth</option>
+              <option>TikTok Views Boost</option>
+              <option>TikTok Likes Package</option>
+              <option>Complete Growth Bundle</option>
+            </select>
+          </div>
+          <div class="field"><label>Notes / Additional Requirements</label><textarea name="notes" maxlength="500" placeholder="Share your TikTok username or any specific requirements..."></textarea></div>
+          <div class="field">
+            <label>Payment Screenshot <span class="req">*</span></label>
+            <label class="file-drop" id="fileDrop">
+              <input type="file" id="fileInput" accept="image/*" required />
+              <div id="fileText">📎 Click to upload payment screenshot<br/><small style="color:var(--muted)">PNG, JPG · Max 3MB</small></div>
+            </label>
+            <img id="filePreview" class="preview" hidden />
+          </div>
+          <button type="submit" class="submit" id="submitBtn">Submit Order</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACK ORDER -->
+<section id="track" class="pad">
+  <div class="wrap">
+    <div class="section-title">Track Your Order</div>
+    <p class="section-sub">Enter your Tracking ID to see the current status of your order.</p>
+    <div class="track-box">
+      <form class="track-form" id="trackForm" autocomplete="off">
+        <input type="text" id="trackInput" placeholder="TB-XXXXXX" required maxlength="30" />
+        <button type="submit">Track Order</button>
+      </form>
+      <div class="track-err" id="trackErr"></div>
+      <div class="track-result" id="trackResult">
+        <div class="steps" id="stepsBox">
+          <div class="bar" id="stepBar" style="width:0"></div>
+          <div class="step" data-i="0"><div class="dot">1</div>Order Received</div>
+          <div class="step" data-i="1"><div class="dot">2</div>Payment Under Review</div>
+          <div class="step" data-i="2"><div class="dot">3</div>Payment Approved</div>
+          <div class="step" data-i="3"><div class="dot">4</div>Processing</div>
+          <div class="step" data-i="4"><div class="dot">5</div>Completed</div>
+        </div>
+        <div class="track-meta" id="trackMeta"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="pad" style="background:var(--panel)">
+  <div class="wrap">
+    <div class="section-title">Frequently Asked Questions</div>
+    <p class="section-sub">Everything you need to know.</p>
+    <div class="faq">
+      <div class="faq-item"><div class="faq-q">Do I need to share my TikTok password?</div><div class="faq-a">Never. We only need your public TikTok username. Your account remains 100% secure.</div></div>
+      <div class="faq-item"><div class="faq-q">How long does delivery take?</div><div class="faq-a">Once your payment is verified, delivery begins within 24 hours and completes progressively over a few days for natural growth.</div></div>
+      <div class="faq-item"><div class="faq-q">Is this safe for my TikTok account?</div><div class="faq-a">Yes. We use organic-style delivery methods that comply with TikTok's ecosystem — no bots, no bans.</div></div>
+      <div class="faq-item"><div class="faq-q">Which payment methods do you accept?</div><div class="faq-a">Currently we accept NayaPay. For other methods, message us on live chat.</div></div>
+      <div class="faq-item"><div class="faq-q">Can I get a refund?</div><div class="faq-a">If delivery fails on our side, we offer a full refund. Once delivery has started, refunds are not possible.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="pad">
+  <div class="wrap">
+    <div class="section-title">24/7 Live Chat Support</div>
+    <p class="section-sub">Our team is online around the clock. Get instant answers, order help, and updates.</p>
+    <div class="chat-card">
+      <span class="badge247">● ONLINE · 24/7</span>
+      <h3>Talk to our team right now</h3>
+      <p>Ask about your order, delivery, payment, or anything else. Replies are typically within minutes.</p>
+      <button onclick="openChat()">💬 Open Live Chat</button>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 TikTok Boost · All rights reserved.</footer>
+
+<!-- LIVE CHAT WIDGET -->
+<button class="chat-fab" id="chatFab" onclick="toggleChat()" aria-label="Open live chat">
+  💬
+  <span class="dot-unread" id="chatUnread">0</span>
+</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-hd">
+    <div>
+      <h4>Live Support</h4>
+      <div class="sub">We're online now</div>
+    </div>
+    <button class="x" onclick="toggleChat()" aria-label="Close">×</button>
+  </div>
+  <div id="chatNameWrap" class="chat-name-form" hidden>
+    <label>Your name</label>
+    <input type="text" id="chatName" placeholder="Enter your name" maxlength="50"/>
+    <label>WhatsApp / Phone (optional)</label>
+    <input type="text" id="chatPhone" placeholder="03XXXXXXXXX" maxlength="20"/>
+    <button onclick="startChat()">Start Chat</button>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <form class="chat-input" id="chatInputForm" hidden>
+    <input type="text" id="chatInput" placeholder="Type your message..." maxlength="500" autocomplete="off"/>
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const ORDERS_KEY = 'tb_orders';
+  const CHATS_KEY  = 'tb_chats';
+  const MY_CHAT_ID = 'tb_my_chat_id';
+  const LAST_SEEN  = 'tb_chat_last_seen';
+  const $ = s => document.querySelector(s);
+
+  // ---------- Utils
+  function toast(msg, ok=true){
+    const t=$('#toast'); t.textContent=msg;
+    t.style.borderLeftColor = ok?'var(--ok)':'var(--bad)';
+    t.classList.add('on');
+    setTimeout(()=>t.classList.remove('on'), 2200);
+  }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+  function fmtTime(iso){ try{return new Date(iso).toLocaleString()}catch(e){return ''} }
+  function getOrders(){ try{return JSON.parse(localStorage.getItem(ORDERS_KEY)||'[]')}catch(e){return[]} }
+  function setOrders(a){ localStorage.setItem(ORDERS_KEY, JSON.stringify(a)); }
+  function getChats(){ try{return JSON.parse(localStorage.getItem(CHATS_KEY)||'{}')}catch(e){return{}} }
+  function setChats(o){ localStorage.setItem(CHATS_KEY, JSON.stringify(o)); }
+
+  // ---------- FAQ
+  document.querySelectorAll('.faq-item').forEach(it=>{
+    it.querySelector('.faq-q').addEventListener('click', ()=> it.classList.toggle('on'));
+  });
+
+  // ---------- Copy payment account
+  window.copyAcct = function(){
+    navigator.clipboard.writeText('03096403818').then(()=>toast('Account number copied'));
+  };
+
+  // ---------- File upload
+  const fileInput = $('#fileInput'), fileDrop=$('#fileDrop'), fileText=$('#fileText'), filePreview=$('#filePreview');
+  let fileDataUrl = null;
+  fileInput.addEventListener('change', e=>{
+    const f = e.target.files[0]; if(!f) return;
+    if(!f.type.startsWith('image/')){ toast('Please upload an image',false); fileInput.value=''; return; }
+    if(f.size > 3*1024*1024){ toast('File too large (max 3MB)',false); fileInput.value=''; return; }
+    const r = new FileReader();
+    r.onload = ev => {
+      fileDataUrl = ev.target.result;
+      filePreview.src = fileDataUrl;
+      filePreview.hidden = false;
+      fileDrop.classList.add('has');
+      fileText.innerHTML = '✅ '+ f.name +' selected';
+    };
+    r.readAsDataURL(f);
+  });
+
+  // ---------- Generate tracking ID
+  function genTid(){
+    const rnd = Math.random().toString(36).toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,4);
+    const t = Date.now().toString(36).toUpperCase().slice(-4);
+    return 'TB-'+t+rnd;
+  }
+
+  // ---------- Submit order
+  let lastTid = null;
+  $('#orderForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const f = e.target;
+    const tid = genTid();
+    const data = {
+      id: tid,                         // tracking id doubles as unique order id
+      trackingId: tid,
+      fullName: f.fullName.value.trim(),
+      whatsapp: f.whatsapp.value.trim(),
+      email: f.email.value.trim(),
+      country: f.country.value,
+      service: f.service.value,
+      notes: f.notes.value.trim(),
+      screenshot: fileDataUrl,
+      status: 'Order Received',
+      createdAt: new Date().toISOString()
+    };
+    if(!data.fullName || !data.whatsapp || !data.email || !data.country || !data.service || !data.screenshot){
+      toast('Please fill all required fields',false); return;
+    }
+    if(!/^\S+@\S+\.\S+$/.test(data.email)){ toast('Invalid email',false); return; }
+    if(!/^[+\d\s\-()]{7,20}$/.test(data.whatsapp)){ toast('Invalid WhatsApp number',false); return; }
+
+    const btn = $('#submitBtn');
+    btn.disabled = true; btn.textContent = 'Submitting...';
+
+    setTimeout(()=>{
+      try{
+        const list = getOrders();
+        list.push(data);
+        setOrders(list);
+        lastTid = tid;
+        $('#successId').textContent = tid;
+        f.hidden = true;
+        $('#successBox').classList.add('on');
+        $('#successBox').scrollIntoView({behavior:'smooth', block:'center'});
+      }catch(err){
+        toast('Something went wrong. Try again.',false);
+        btn.disabled=false; btn.textContent='Submit Order';
+      }
+    }, 350);
+  });
+
+  window.copyTid = function(){
+    if(!lastTid) return;
+    navigator.clipboard.writeText(lastTid).then(()=>toast('Tracking ID copied'));
+  };
+  window.goTrack = function(){
+    if(lastTid){ $('#trackInput').value = lastTid; renderTrack(lastTid); }
+    document.getElementById('track').scrollIntoView({behavior:'smooth'});
+  };
+
+  window.resetForm = function(){
+    const form = $('#orderForm');
+    form.reset(); form.hidden = false;
+    fileDataUrl = null;
+    filePreview.hidden = true;
+    fileDrop.classList.remove('has');
+    fileText.innerHTML = '📎 Click to upload payment screenshot<br/><small style="color:var(--muted)">PNG, JPG · Max 3MB</small>';
+    const btn = $('#submitBtn'); btn.disabled=false; btn.textContent='Submit Order';
+    $('#successBox').classList.remove('on');
+    document.getElementById('order').scrollIntoView({behavior:'smooth'});
+  };
+
+  // ---------- Track order
+  const STAGES = ['Order Received','Payment Under Review','Payment Approved','Processing','Completed'];
+  // Map any legacy/admin statuses to canonical stage index
+  const STATUS_MAP = {
+    'Order Received':0,
+    'Pending Review':1, 'Payment Under Review':1,
+    'Payment Verified':2, 'Payment Approved':2,
+    'Processing':3,
+    'Completed':4,
+    'Rejected':-1
+  };
+
+  $('#trackForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const id = $('#trackInput').value.trim().toUpperCase();
+    renderTrack(id);
+  });
+
+  function renderTrack(id){
+    const err = $('#trackErr'); err.textContent='';
+    const res = $('#trackResult');
+    if(!id){ err.textContent='Please enter a Tracking ID.'; res.classList.remove('on'); return; }
+    const order = getOrders().find(o => (o.trackingId||o.id||'').toUpperCase() === id);
+    if(!order){ err.textContent='No order found for this Tracking ID.'; res.classList.remove('on'); return; }
+    const idx = STATUS_MAP[order.status];
+    const meta = $('#trackMeta');
+    if(idx === -1){
+      meta.innerHTML = `
+        <div class="row"><span class="k">Tracking ID</span><span>${esc(order.trackingId||order.id)}</span></div>
+        <div class="row"><span class="k">Status</span><span style="color:var(--bad);font-weight:700">❌ Rejected</span></div>
+        <div class="row"><span class="k">Service</span><span>${esc(order.service)}</span></div>
+        <div class="row"><span class="k">Placed on</span><span>${fmtTime(order.createdAt)}</span></div>
+        <div style="margin-top:10px;color:var(--muted);font-size:12px">Your order was rejected. Please contact live chat for details.</div>`;
+      $('#stepsBox').querySelectorAll('.step').forEach(s=>s.classList.remove('done','current'));
+      $('#stepBar').style.width='0';
+      res.classList.add('on');
+      return;
+    }
+    const cur = Math.max(0, idx||0);
+    const steps = $('#stepsBox').querySelectorAll('.step');
+    steps.forEach((s,i)=>{
+      s.classList.remove('done','current');
+      if(i<cur) s.classList.add('done');
+      else if(i===cur) s.classList.add('current');
+    });
+    // bar width based on step count (5 steps -> 4 gaps)
+    const pct = cur/(STAGES.length-1)*100;
+    $('#stepBar').style.width = 'calc(('+pct+'% - '+(pct/100*32)+'px))';
+    meta.innerHTML = `
+      <div class="row"><span class="k">Tracking ID</span><span style="font-family:ui-monospace,Menlo,monospace;color:var(--accent2);font-weight:700">${esc(order.trackingId||order.id)}</span></div>
+      <div class="row"><span class="k">Current Status</span><span style="font-weight:700">${esc(STAGES[cur])}</span></div>
+      <div class="row"><span class="k">Customer</span><span>${esc(order.fullName)}</span></div>
+      <div class="row"><span class="k">Service</span><span>${esc(order.service)}</span></div>
+      <div class="row"><span class="k">Placed on</span><span>${fmtTime(order.createdAt)}</span></div>
+      ${order.updatedAt?`<div class="row"><span class="k">Last update</span><span>${fmtTime(order.updatedAt)}</span></div>`:''}`;
+    res.classList.add('on');
+  }
+
+  // ---------- LIVE CHAT
+  function myId(){ return localStorage.getItem(MY_CHAT_ID) || ''; }
+  function setMyId(v){ localStorage.setItem(MY_CHAT_ID, v); }
+  function myChat(){
+    const id = myId(); if(!id) return null;
+    return getChats()[id] || null;
+  }
+
+  window.toggleChat = function(){
+    const p = $('#chatPanel');
+    const open = p.classList.toggle('on');
+    if(open){ initChatUi(); markAllRead(); }
+  };
+  window.openChat = function(){
+    $('#chatPanel').classList.add('on');
+    initChatUi(); markAllRead();
+  };
+
+  function initChatUi(){
+    const chat = myChat();
+    const nameWrap = $('#chatNameWrap');
+    const inputForm = $('#chatInputForm');
+    const body = $('#chatBody');
+    if(!chat){
+      nameWrap.hidden = false;
+      inputForm.hidden = true;
+      body.innerHTML = '<div class="chat-empty">👋 Welcome! Enter your name to start chatting with our support team.</div>';
+      return;
+    }
+    nameWrap.hidden = true;
+    inputForm.hidden = false;
+    renderChatMessages();
+    setTimeout(()=>$('#chatInput').focus(), 50);
+  }
+
+  window.startChat = function(){
+    const name = $('#chatName').value.trim();
+    const phone = $('#chatPhone').value.trim();
+    if(!name){ toast('Please enter your name',false); return; }
+    const id = 'chat_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+    const chats = getChats();
+    chats[id] = {
+      id, name, phone,
+      createdAt: new Date().toISOString(),
+      messages: [{
+        from:'system', body:'Chat started. A support agent will be with you shortly.', at:new Date().toISOString()
+      }]
+    };
+    setChats(chats);
+    setMyId(id);
+    initChatUi();
+  };
+
+  $('#chatInputForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const inp = $('#chatInput');
+    const body = inp.value.trim(); if(!body) return;
+    const id = myId(); if(!id) return;
+    const chats = getChats();
+    if(!chats[id]) return;
+    chats[id].messages.push({from:'customer', body, at:new Date().toISOString()});
+    chats[id].updatedAt = new Date().toISOString();
+    setChats(chats);
+    inp.value='';
+    renderChatMessages();
+    markAllRead();
+  });
+
+  function renderChatMessages(){
+    const chat = myChat(); const body = $('#chatBody');
+    if(!chat || !chat.messages.length){ body.innerHTML = '<div class="chat-empty">Say hi 👋</div>'; return; }
+    body.innerHTML = chat.messages.map(m=>{
+      if(m.from==='system') return `<div class="chat-empty" style="margin:6px auto;padding:4px;font-size:11px">${esc(m.body)}</div>`;
+      const mine = m.from==='customer';
+      return `<div class="chat-msg ${mine?'me':'them'}">${esc(m.body)}<span class="t">${fmtTime(m.at)}</span></div>`;
+    }).join('');
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function markAllRead(){
+    const chat = myChat(); if(!chat) return;
+    localStorage.setItem(LAST_SEEN, String(chat.messages.length));
+    updateUnread();
+  }
+  function updateUnread(){
+    const chat = myChat();
+    const badge = $('#chatUnread');
+    if(!chat){ badge.classList.remove('on'); return; }
+    const seen = parseInt(localStorage.getItem(LAST_SEEN)||'0',10);
+    const adminMsgs = chat.messages.filter(m=>m.from==='admin').length;
+    // Count unseen admin messages
+    let unread = 0;
+    for(let i=seen;i<chat.messages.length;i++){
+      if(chat.messages[i].from==='admin') unread++;
+    }
+    if(unread>0){ badge.textContent=unread; badge.classList.add('on'); }
+    else badge.classList.remove('on');
+  }
+
+  // Cross-tab sync (admin replies)
+  window.addEventListener('storage', e=>{
+    if(e.key===CHATS_KEY){
+      if($('#chatPanel').classList.contains('on')){ renderChatMessages(); markAllRead(); }
+      else updateUnread();
+    }
+    if(e.key===ORDERS_KEY){
+      const val = $('#trackInput').value.trim().toUpperCase();
+      if(val && $('#trackResult').classList.contains('on')) renderTrack(val);
+    }
+  });
+
+  // Poll unread every few seconds (same-tab admin updates via admin.html open in another tab already covered by 'storage', but poll acts as safety)
+  setInterval(updateUnread, 3000);
+  updateUnread();
+})();
+</script>
+</body>
+</html>
